@@ -7,34 +7,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingAPI.Models;
 
-namespace BookingAPI.Controllers
-{
+namespace BookingAPI.Controllers {
     [Route("api/TodoItems")]
     [ApiController]
-    public class TodoItemsController : ControllerBase
-    {
+    public class TodoItemsController : ControllerBase {
         private readonly TodoContext _context;
 
-        public TodoItemsController(TodoContext context)
-        {
+        public TodoItemsController(TodoContext context) {
             _context = context;
         }
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
-        {
+        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems() {
             return await _context.TodoItems.ToListAsync();
         }
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
-        {
+        public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id) {
             var todoItem = await _context.TodoItems.FindAsync(id);
 
-            if (todoItem == null)
-            {
+            if (todoItem == null) {
                 return NotFound();
             }
 
@@ -45,27 +39,20 @@ namespace BookingAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id, TodoItemDTO todoItem)
-        {
-            if (id != todoItem.Id)
-            {
+        public async Task<IActionResult> PutTodoItem(long id, TodoItemDTO todoItem) {
+            if (id != todoItem.Id) {
                 return BadRequest();
             }
 
             _context.Entry(todoItem).State = EntityState.Modified;
 
-            try
-            {
+            try {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoItemExists(id))
-                {
+            catch (DbUpdateConcurrencyException) {
+                if (!TodoItemExists(id)) {
                     return NotFound();
-                }
-                else
-                {
+                } else {
                     throw;
                 }
             }
@@ -77,8 +64,7 @@ namespace BookingAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoItem)
-        {
+        public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoItem) {
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
@@ -87,11 +73,9 @@ namespace BookingAPI.Controllers
 
         // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TodoItemDTO>> DeleteTodoItem(long id)
-        {
+        public async Task<ActionResult<TodoItemDTO>> DeleteTodoItem(long id) {
             var todoItem = await _context.TodoItems.FindAsync(id);
-            if (todoItem == null)
-            {
+            if (todoItem == null) {
                 return NotFound();
             }
 
@@ -101,8 +85,7 @@ namespace BookingAPI.Controllers
             return todoItem;
         }
 
-        private bool TodoItemExists(long id)
-        {
+        private bool TodoItemExists(long id) {
             return _context.TodoItems.Any(e => e.Id == id);
         }
     }
