@@ -35,6 +35,28 @@ namespace BookingAPI.Controllers {
             return todoItem;
         }
 
+        // GET: api/TodoItems/setabunch
+        [HttpGet("setabunch")]
+        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> SetLotsTodoItem() {
+            TodoItemDTO td = new TodoItemDTO();
+            td.Name = "test1";
+            td.IsComplete = false;
+            _context.TodoItems.Add(td);
+            await _context.SaveChangesAsync();
+            td = new TodoItemDTO();
+            td.Name = "test2";
+            td.IsComplete = true;
+            _context.TodoItems.Add(td);
+            await _context.SaveChangesAsync();
+            td = new TodoItemDTO();
+            td.Name = "test3";
+            td.IsComplete = false;
+            _context.TodoItems.Add(td);
+            await _context.SaveChangesAsync();
+
+            return await _context.TodoItems.ToListAsync();
+        }
+
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.

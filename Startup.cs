@@ -7,6 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using BookingAPI.Models;
 
 namespace BookingAPI {
+
+    /*
+     * The Startup class is where:
+     *      Services required by the app are configured.
+     *      The request handling pipeline is defined.
+     */
+
     public class Startup {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
@@ -16,8 +23,8 @@ namespace BookingAPI {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddDbContext<TodoContext>(opt =>
-              opt.UseInMemoryDatabase("TodoList"));
+            services.AddDbContext<BookingAPIContext>(opt =>
+              opt.UseInMemoryDatabase("Hotels"));
             services.AddControllers();
         }
 
