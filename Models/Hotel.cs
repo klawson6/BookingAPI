@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingAPI.Models {
     public class Hotel {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string name { get; set; }
         public int numSingle { get; set; }
         public int numDouble { get; set; }

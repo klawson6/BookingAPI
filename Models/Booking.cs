@@ -5,12 +5,16 @@ using System.Threading.Tasks;
 
 namespace BookingAPI.Models {
     public class Booking {
-        public Guid Id { get; set; }
-        public Guid hotel { get; set; }
+        public long Id { get; set; }
+        public long hotel { get; set; }
         public DateTime from { get; set; }
 
         public DateTime to { get; set; }
 
-        public int[] rooms { get; set; }
+        public int numSingle { get; set; }
+        public int numDouble { get; set; }
+
+        public int numDeluxe { get; set; }
+
     }
 }

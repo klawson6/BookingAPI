@@ -10,7 +10,7 @@ namespace BookingAPI.Models {
         private const int MAX_ROOMS = 6;
 
         private string name { get; set; }
-        private Guid id { get; set; }
+        private long id { get; set; }
 
         private int numSingle { get; set; }
 
@@ -77,17 +77,17 @@ namespace BookingAPI.Models {
          * from - DateTime object representing the date the booking begins.
          * to - DateTime object representing the date the booking begins.
          */
-        public bool checkAvailabilty(int[] rooms, DateTime from, DateTime to) {
+        public bool checkAvailabilty(int single, int doub, int deluxe, DateTime from, DateTime to) {
             int[] availability = { numSingle, numDouble, numDeluxe }; // The maximum available rooms
             foreach (Booking b in bookings) { // For each booking
                 if (!((b.to <= from && b.from < from) || (b.to > to && b.from >= to))) { // If the booking overlaps the required timeframe at all
-                    availability[0] -= b.rooms[0];
-                    availability[1] -= b.rooms[1];
-                    availability[2] -= b.rooms[2];
+                    availability[0] -= b.numSingle;
+                    availability[1] -= b.numDouble;
+                    availability[2] -= b.numDeluxe;
                 }
             }
             // Return true only if there are enough rooms available of every type, required for this booking. 
-            return (availability[0] >= rooms[0] && availability[1] >= rooms[1] && availability[2] >= rooms[2]);
+            return (availability[0] >= single && availability[1] >=doub && availability[2] >= deluxe);
         }
 
         /*
@@ -109,8 +109,8 @@ namespace BookingAPI.Models {
          *              1 - Double rooms
          *              2 - Deluxe rooms
          */
-        private bool checkOccupancy(int[] rooms, int[] people) {
-            return (rooms[0] >= people[0] && rooms[1] * 2 >= people[1] && rooms[2] * 2 >= people[2]);
+        private bool checkOccupancy(int single, int doub, int deluxe, int[] people) {
+            return (single >= people[0] && doub * 2 >= people[1] && deluxe * 2 >= people[2]);
         }
 
         /*
@@ -136,13 +136,14 @@ namespace BookingAPI.Models {
          * from - DateTime object representing the date the booking begins.
          * to - DateTime object representing the date the booking begins.
          */
-        public Booking createBooking(int[] rooms, int[] people, DateTime from, DateTime to) {
-            if (checkOccupancy(rooms, people) && checkAvailabilty(rooms, from, to)) { // Check a booking can be made to meet the given booking specifications
+        public Booking createBooking(int single, int doub, int deluxe, int[] people, DateTime from, DateTime to) {
+            if (checkOccupancy(single, doub, deluxe, people) && checkAvailabilty(single, doub, deluxe, from, to)) { // Check a booking can be made to meet the given booking specifications
                 Booking booking = new Booking { // Create a new booking
-                    Id = Guid.NewGuid(),
                     from = from,
                     to = to,
-                    rooms = rooms,
+                    numSingle = single,
+                    numDouble = doub,
+                    numDeluxe = deluxe,
                     hotel = id
                 };
                 bookings.Add(booking); // Add a reference of the new booking to the set of bookings
