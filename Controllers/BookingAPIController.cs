@@ -23,8 +23,14 @@ namespace BookingAPI.Controllers {
             return await HotelDB.Hotels.ToListAsync();
         }
 
+        // GET: api/BookingAPI
+        [HttpGet("Bookings")]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings() {
+            return await BookingDB.Bookings.ToListAsync();
+        }
+
         // GET: api/BookingAPI/5
-        [HttpGet("HotelID/{id}")]
+        [HttpGet("Hotel/id/{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(long id) {
             var hotel = await HotelDB.Hotels.FindAsync(id);
 
@@ -36,7 +42,7 @@ namespace BookingAPI.Controllers {
         }
 
         // GET: api/BookingAPI/5
-        [HttpGet("Hotel/{name}")]
+        [HttpGet("Hotel/search/{name}")]
         public async Task<ActionResult<IEnumerable<Hotel>>> SearchHotel(string name) {
             return await HotelDB.Hotels.Where(h => h.name == name).ToListAsync(); ;
         }
@@ -44,7 +50,7 @@ namespace BookingAPI.Controllers {
         // POST: api/BookingAPI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost("AddHotel")]
+        [HttpPost("Hotel/add")]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel) { // The hotel fields are given as JSON in the body fo the post, and implicitly converted to a Hotel object.
             HotelDB.Hotels.Add(hotel); // Add Hotel object to the database context that accesses Hotels tables of database
             await HotelDB.SaveChangesAsync(); // Wait for the database to update with new record
@@ -59,7 +65,46 @@ namespace BookingAPI.Controllers {
         // POST: api/BookingAPI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost("Booking")]
+        [HttpDelete("Hotel/delete/{id}")]
+        public async Task<ActionResult<Hotel>> DeleteHotel(long id) { // The hotel fields are given as JSON in the body fo the post, and implicitly converted to a Hotel object.
+            var hotel = await HotelDB.Hotels.FindAsync(id);
+
+            if (hotel == null) {
+                return NotFound();
+            }
+
+            HotelDB.Hotels.Remove(hotel);
+            await HotelDB.SaveChangesAsync();
+
+            foreach (Booking booking in BookingDB.Bookings.Where(b => b.hotel == id).ToList()) {
+                BookingDB.Bookings.Remove(booking);
+                await BookingDB.SaveChangesAsync();
+            }
+
+            return hotel;
+        }
+
+        // POST: api/BookingAPI
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpDelete("Hotel/deleteall")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> DeleteHotels() { // The hotel fields are given as JSON in the body fo the post, and implicitly converted to a Hotel object.
+            List<Hotel> hotels = HotelDB.Hotels.ToList();
+            foreach (Hotel hotel in hotels) {
+                HotelDB.Hotels.Remove(hotel);
+                await HotelDB.SaveChangesAsync();
+            }
+            foreach (Booking booking in BookingDB.Bookings.ToList()) {
+                BookingDB.Bookings.Remove(booking);
+                await BookingDB.SaveChangesAsync();
+            }
+            return hotels;
+        }
+
+        // POST: api/BookingAPI
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPost("Hotel/Book")]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking) { // The hotel fields are given as JSON in the body fo the post, and implicitly converted to a Hotel object.
             BookingDB.Bookings.Add(booking); // Add Hotel object to the database context that accesses Hotels tables of database
             await BookingDB.SaveChangesAsync(); // Wait for the database to update with new record
@@ -72,7 +117,7 @@ namespace BookingAPI.Controllers {
         }
 
         // GET: api/BookingAPI/5
-        [HttpGet("{id}/Bookings")]
+        [HttpGet("Hotel/{id}/Bookings")]
         public ActionResult<IEnumerable<Booking>> GetHotelBookings(long id) {
             //var bookings = BookingDB.Bookings.Where(b => b.hotel == id).ToList();
 
