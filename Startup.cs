@@ -6,6 +6,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BookingAPI.Models;
 
+/*
+ * 
+ * THIS IS ADAPTED CODE FROM MICROSOFT .NET TUTORIALS I DO NOT CLAIM TO HAVE WRITTEN IT ALL
+ * 
+ */
 namespace BookingAPI {
 
     /*
@@ -24,9 +29,9 @@ namespace BookingAPI {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services.AddDbContext<HotelDBContext>(opt =>
-              opt.UseInMemoryDatabase("Hotels"));
+              opt.UseInMemoryDatabase("Hotels")); // Make a database for Hotels
             services.AddDbContext<BookingDBContext>(opt =>
-             opt.UseInMemoryDatabase("Bookings"));
+             opt.UseInMemoryDatabase("Bookings")); // Make a database for Bookings
             services.AddControllers();
         }
 

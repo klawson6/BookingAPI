@@ -1,6 +1,12 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
+/*
+ * 
+ * THIS IS ADAPTED CODE FROM MICROSOFT .NET TUTORIALS I DO NOT CLAIM TO HAVE WRITTEN IT ALL
+ * 
+ */
+
 namespace BookingAPI {
     public class Program {
         public static void Main(string[] args) {
