@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using BookingAPI.Models;
 
 namespace BookingAPI.Models {
     public static class BookingSupport {
